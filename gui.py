@@ -78,15 +78,6 @@ class OSCServer:
     def send_stop_listen(self, test):
         self.client.send_message("/stop_listening", [])
 
-    # SEGMENTS
-    def send_start_monologue(self, test):
-        self.client.send_message("/start_monologue", [])
-
-    def send_start_interview(self, test):
-        self.client.send_message("/start_interview", [])
-
-    def send_start_game(self, test):
-        self.client.send_message("/start_game", [])
 
     # GAZE 
     def send_create_new_camera_target(self):
@@ -148,19 +139,15 @@ class OSCApp(App):
         self.main_layout = BoxLayout(orientation='horizontal')
  
         self.column1 = BoxLayout(orientation='vertical', width=200)
-        self.column2 = BoxLayout(orientation='vertical', width=200)
         self.column4 = BoxLayout(orientation='vertical', width=200)
         
         self.column1.add_widget(Label(text='Chat', size_hint_y=None, height=30))
-        self.column2.add_widget(Label(text='Segments', size_hint_y=None, height=30))
 
         self.main_layout.add_widget(self.column1)
-        self.main_layout.add_widget(self.column2)
         self.main_layout.add_widget(self.column4)
         
   
         self.add_column1_buttons()
-        self.add_column2_buttons()
        
         
         return self.main_layout
@@ -249,14 +236,6 @@ class OSCApp(App):
         self.update_chat_buttons()
 
 
-
-    def add_column2_buttons(self):
-        
-        self.column2.add_widget(Button(text="Start Monologue", on_press=self.osc_server.send_start_monologue))
-        self.column2.add_widget(Button(text="Start Interview", on_press=self.osc_server.send_start_interview))
-        self.column2.add_widget(Button(text="Start Game", on_press=self.osc_server.send_start_game))
-
-
     def add_column4_buttons(self):
 
         self.column4.add_widget(Label(text='Camera Targets', size_hint_y=None, height=30))
@@ -321,6 +300,12 @@ async def main():
         server = OSCServer()
         await server.run_server()  
     
+    except KeyboardInterrupt:
+        server.client.send_message("/stop_chat_controller", [])
+        print("Server closed manually.")
+
+if __name__ == "__main__":
+    asyncio.run(main())
     except KeyboardInterrupt:
         server.client.send_message("/stop_chat_controller", [])
         print("Server closed manually.")
