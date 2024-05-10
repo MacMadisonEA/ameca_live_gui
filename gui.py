@@ -78,6 +78,9 @@ class OSCServer:
     def send_stop_listen(self, test):
         self.client.send_message("/stop_listening", [])
 
+    def send_welcome_tts(self, test):
+        self.client.send_message("/welcome_tts", [])
+
 
     # GAZE 
     def send_create_new_camera_target(self):
@@ -139,11 +142,14 @@ class OSCApp(App):
         self.main_layout = BoxLayout(orientation='horizontal')
  
         self.column1 = BoxLayout(orientation='vertical', width=200)
+        self.column2 = BoxLayout(orientation='vertical', width=200)
         self.column4 = BoxLayout(orientation='vertical', width=200)
         
         self.column1.add_widget(Label(text='Chat', size_hint_y=None, height=30))
+        self.column2.add_widget(Label(text='TTS', size_hint_y=None, height=30))
 
         self.main_layout.add_widget(self.column1)
+        self.main_layout.add_widget(self.column2)
         self.main_layout.add_widget(self.column4)
         
   
@@ -235,6 +241,9 @@ class OSCApp(App):
         
         self.update_chat_buttons()
 
+    def add_column2_buttons(self):
+        welcome_tts_btn = Button(text="TTS Welcome line", on_press=self.osc_server.send_welcome_tts)
+        self.column1.add_widget(welcome_tts_btn)
 
     def add_column4_buttons(self):
 
@@ -306,9 +315,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-    except KeyboardInterrupt:
-        server.client.send_message("/stop_chat_controller", [])
-        print("Server closed manually.")
 
-if __name__ == "__main__":
-    asyncio.run(main())
