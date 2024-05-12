@@ -154,6 +154,7 @@ class OSCApp(App):
         
   
         self.add_column1_buttons()
+        self.add_column2_buttons()
        
         
         return self.main_layout
@@ -243,7 +244,7 @@ class OSCApp(App):
 
     def add_column2_buttons(self):
         welcome_tts_btn = Button(text="TTS Welcome line", on_press=self.osc_server.send_welcome_tts)
-        self.column1.add_widget(welcome_tts_btn)
+        self.column2.add_widget(welcome_tts_btn)
 
     def add_column4_buttons(self):
 
@@ -315,4 +316,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-
